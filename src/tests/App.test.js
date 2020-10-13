@@ -33,22 +33,28 @@ describe('App Tests', () => {
         mockFetchShow.mockResolvedValueOnce({
             data: mockData
         })
-       const { rerender } = render(<App />)
-        await waitFor(() => {})
+        const { rerender } = render(<App />)
+        await waitFor(() => { })
         rerender(<App />)
         expect(screen.getByAltText('Stranger Things')).not.toBeNull()
 
         expect(screen.getAllByText(/Stranger Things/i)).not.toEqual(0)
 
         expect(screen.getByText(/is set in 1983 Indiana, where a young boy vanishes into thin air. As friends, family and local police search for answers, they are drawn into an extraordinary mystery involving top-secret government experiments, terrifying supernatural forces and one very strange little girl./i)).not.toBeNull()
+
+        expect(screen.getByText(/select a season/i)).not.toBeNull()
     })
 
-    //test fetching data message
-
-    //test image exists
-    //test title exists on render
-    //test summary exists on render
-    //test select a season exists
-    //test can select season
-
+    test('can select a season', async () => {
+        mockFetchShow.mockResolvedValueOnce({
+            data: mockData
+        })
+        render(<App />)
+        await waitFor(() => {})
+        const dropdown = screen.getByText(/select a season/i)
+        fireEvent.mouseDown(dropdown)
+        expect(screen.getByText('Season 1')).not.toBeNull()
+        fireEvent.mouseDown(screen.getByText('Season 1'))
+        expect(screen.queryByText(/select a season/i)).toBeNull()
+    })
 })
